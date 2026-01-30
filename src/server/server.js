@@ -23,7 +23,10 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 const authRoutes = require('./routes/auth');
+const projectRoutes = require('./routes/projects');
+
 app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
 
 // API info endpoint
 app.get('/api', (req, res) => {
