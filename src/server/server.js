@@ -21,7 +21,11 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Placeholder routes (will be implemented in issues)
+// Routes
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
+
+// API info endpoint
 app.get('/api', (req, res) => {
   res.json({
     message: 'ScopeGuard API',
