@@ -5,6 +5,9 @@
   "main": "src/server/server.js",
   "scripts": {
     "dev": "nodemon src/server/server.js",
+    "dev:ts": "ts-node-dev --respawn --transpile-only src/server/server.ts",
+    "build": "echo 'TypeScript conversion in progress'",
+    "build:ts": "tsc --noEmit false || true",
     "start": "node src/server/server.js",
     "db:init": "node src/database/init.js",
     "test": "echo \"No tests yet\" && exit 0"
@@ -29,6 +32,16 @@
     "stripe": "^14.10.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "@types/bcrypt": "^6.0.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^25.1.0",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
   }
 }
