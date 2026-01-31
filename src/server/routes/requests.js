@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const Request = require('../models/Request');
 const Attachment = require('../models/Attachment');
+const TimeEntry = require('../models/TimeEntry');
 const Project = require('../models/Project');
 const { authMiddleware } = require('../middleware/auth');
 
@@ -129,10 +130,12 @@ router.get('/:id', (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    // Include attachments
+    // Include attachments and time tracking
     const attachments = Attachment.findByRequestId(req.params.id);
+    const timeEntries = TimeEntry.findByRequestId(req.params.id);
+    const totalTimeSeconds = TimeEntry.getTotalTime(req.params.id);
 
-    res.json({ request, attachments });
+    res.json({ request, attachments, timeEntries, totalTimeSeconds });
   } catch (err) {
     console.error('Get request error:', err);
     res.status(500).json({ error: 'Failed to fetch request' });
@@ -315,6 +318,127 @@ router.delete('/:id/attachments/:attachmentId', (req, res) => {
   } catch (err) {
     console.error('Delete attachment error:', err);
     res.status(500).json({ error: 'Failed to delete attachment' });
+  }
+});
+
+// TIME TRACKING ENDPOINTS
+
+// GET /api/projects/:projectId/requests/:id/time - Get all time entries for request
+router.get('/:id/time', (req, res) => {
+  try {
+    const request = Request.findById(req.params.id);
+    
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    const timeEntries = TimeEntry.findByRequestId(req.params.id);
+    const totalSeconds = TimeEntry.getTotalTime(req.params.id);
+    const activeTimer = TimeEntry.getActiveTimer(req.user.id);
+
+    res.json({ 
+      timeEntries, 
+      totalSeconds,
+      activeTimer: activeTimer && activeTimer.request_id === parseInt(req.params.id) ? activeTimer : null
+    });
+  } catch (err) {
+    console.error('Get time entries error:', err);
+    res.status(500).json({ error: 'Failed to fetch time entries' });
+  }
+});
+
+// POST /api/projects/:projectId/requests/:id/time/start - Start timer
+router.post('/:id/time/start', (req, res) => {
+  try {
+    const request = Request.findById(req.params.id);
+    
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    const { description } = req.body;
+
+    const timeEntry = TimeEntry.start({
+      request_id: req.params.id,
+      user_id: req.user.id,
+      description
+    });
+
+    res.status(201).json({ timeEntry });
+  } catch (err) {
+    console.error('Start timer error:', err);
+    res.status(400).json({ error: err.message || 'Failed to start timer' });
+  }
+});
+
+// POST /api/projects/:projectId/requests/:id/time/stop - Stop active timer
+router.post('/:id/time/stop', (req, res) => {
+  try {
+    const activeTimer = TimeEntry.getActiveTimer(req.user.id);
+
+    if (!activeTimer) {
+      return res.status(400).json({ error: 'No active timer found' });
+    }
+
+    if (activeTimer.request_id !== parseInt(req.params.id)) {
+      return res.status(400).json({ error: 'Active timer is for a different request' });
+    }
+
+    const timeEntry = TimeEntry.stop(activeTimer.id, req.user.id);
+
+    res.json({ timeEntry });
+  } catch (err) {
+    console.error('Stop timer error:', err);
+    res.status(400).json({ error: err.message || 'Failed to stop timer' });
+  }
+});
+
+// PUT /api/projects/:projectId/requests/:id/time/:timeId - Update time entry
+router.put('/:id/time/:timeId', (req, res) => {
+  try {
+    const timeEntry = TimeEntry.findById(req.params.timeId);
+    
+    if (!timeEntry) {
+      return res.status(404).json({ error: 'Time entry not found' });
+    }
+
+    if (timeEntry.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const { description, started_at, ended_at } = req.body;
+
+    const updated = TimeEntry.update(req.params.timeId, {
+      description,
+      started_at,
+      ended_at
+    });
+
+    res.json({ timeEntry: updated });
+  } catch (err) {
+    console.error('Update time entry error:', err);
+    res.status(500).json({ error: 'Failed to update time entry' });
+  }
+});
+
+// DELETE /api/projects/:projectId/requests/:id/time/:timeId - Delete time entry
+router.delete('/:id/time/:timeId', (req, res) => {
+  try {
+    const timeEntry = TimeEntry.findById(req.params.timeId);
+    
+    if (!timeEntry) {
+      return res.status(404).json({ error: 'Time entry not found' });
+    }
+
+    if (timeEntry.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    TimeEntry.delete(req.params.timeId);
+    res.json({ message: 'Time entry deleted successfully' });
+  } catch (err) {
+    console.error('Delete time entry error:', err);
+    res.status(500).json({ error: 'Failed to delete time entry' });
   }
 });
 

@@ -66,6 +66,20 @@ CREATE TABLE IF NOT EXISTS request_attachments (
     FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE
 );
 
+-- Time tracking for requests
+CREATE TABLE IF NOT EXISTS time_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    request_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    description TEXT,
+    started_at INTEGER NOT NULL,
+    ended_at INTEGER, -- NULL if timer is still running
+    duration_seconds INTEGER, -- Calculated when ended
+    created_at INTEGER DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Change orders (generated from out-of-scope requests)
 CREATE TABLE IF NOT EXISTS change_orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -115,6 +129,8 @@ CREATE INDEX IF NOT EXISTS idx_projects_user_id ON projects(user_id);
 CREATE INDEX IF NOT EXISTS idx_scope_items_project_id ON scope_items(project_id);
 CREATE INDEX IF NOT EXISTS idx_requests_project_id ON requests(project_id);
 CREATE INDEX IF NOT EXISTS idx_request_attachments_request_id ON request_attachments(request_id);
+CREATE INDEX IF NOT EXISTS idx_time_entries_request_id ON time_entries(request_id);
+CREATE INDEX IF NOT EXISTS idx_time_entries_user_id ON time_entries(user_id);
 CREATE INDEX IF NOT EXISTS idx_change_orders_project_id ON change_orders(project_id);
 CREATE INDEX IF NOT EXISTS idx_portal_tokens_token ON portal_tokens(token);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
