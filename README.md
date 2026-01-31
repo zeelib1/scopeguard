@@ -11,9 +11,9 @@ ScopeGuard is a professional scope management tool for freelancers and agencies.
 ### Backend
 - **Node.js** + **Express** - REST API
 - **SQLite** (via better-sqlite3) - Database
-- **TypeScript** - Type safety (conversion in progress)
+- **TypeScript** - Full TypeScript implementation
 - **JWT** - Authentication
-- **Stripe** - Payments integration
+- **Stripe** - Payments integration (configured)
 
 ### Frontend
 - **Nuxt 3** - Vue.js framework
@@ -46,16 +46,16 @@ ScopeGuard is a professional scope management tool for freelancers and agencies.
 - ✅ **Export Tools** (Markdown, JSON)
 
 ### Frontend Features
-- ✅ **Dashboard** (overview stats, quick actions)
-- ✅ **Projects List & Detail** (full project view)
-- ✅ **Request Management** (approve/reject workflow)
-- ✅ **Change Order Review** (cost preview, status tracking)
+- ✅ **Dashboard** (real stats from API, quick actions)
+- ✅ **Projects List & Detail** (full project view with tabs)
+- ✅ **Request Management** (approve/reject workflow, bulk operations)
+- ✅ **Change Order Creation** (from approved requests)
 - ✅ **Budget Visualization** (gauges, health indicators)
-- ✅ **Team Management** (invite members, role management)
-- ✅ **Settings** (profile, notifications, webhooks)
-- ✅ **Reports** (weekly digest, scope health)
-- ✅ **Responsive Design** (mobile-first)
-- ✅ **Professional UI** (modern SaaS design)
+- ✅ **Time Tracking** (start/stop timer, recent entries)
+- ✅ **File Upload** (drag-and-drop, multiple files)
+- ✅ **Project Forms** (create/edit with validation)
+- ✅ **Responsive Design** (mobile-friendly with hamburger menu)
+- ✅ **Professional UI** (modern SaaS design with TailwindCSS)
 
 ---
 
@@ -99,11 +99,8 @@ ScopeGuard is a professional scope management tool for freelancers and agencies.
    - **Backend API** at `http://localhost:3001`
    - **Frontend** at `http://localhost:3000`
 
-### Test Credentials
-```
-Email: test@scopeguard.app
-Password: password123
-```
+### First Time Setup
+Register a new account through the frontend at `http://localhost:3000/register`
 
 ---
 
@@ -220,8 +217,9 @@ npm run dev
 
 ### Building for Production
 ```bash
-npm run build           # Builds frontend
-npm run build:backend   # (TypeScript conversion in progress)
+npm run build:backend   # TypeScript -> JavaScript (dist/)
+npm run build:frontend  # Nuxt build (frontend/.output/)
+npm run build           # Build both
 ```
 
 ### Database Management
