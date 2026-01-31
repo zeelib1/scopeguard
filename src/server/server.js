@@ -59,6 +59,7 @@ app.use('/api/activity', activityLogRoutes);
 app.use('/api/budget', budgetRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/scope-templates', scopeTemplatesRoutes);
+app.use('/api/webhooks', require('./routes/webhooks'));
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api', portalRoutes); // Portal routes (includes public endpoint)

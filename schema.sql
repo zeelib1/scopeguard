@@ -177,6 +177,36 @@ CREATE TABLE IF NOT EXISTS subscription_events (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Webhooks (user-configured webhook endpoints)
+CREATE TABLE IF NOT EXISTS webhooks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    project_id INTEGER, -- NULL for global webhooks
+    url TEXT NOT NULL,
+    secret TEXT, -- Optional signing secret
+    events TEXT NOT NULL, -- JSON array of subscribed events
+    status TEXT DEFAULT 'active', -- active, paused, failed
+    last_triggered_at INTEGER,
+    last_error TEXT,
+    failure_count INTEGER DEFAULT 0,
+    created_at INTEGER DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
+-- Webhook delivery log
+CREATE TABLE IF NOT EXISTS webhook_deliveries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    webhook_id INTEGER NOT NULL,
+    event_type TEXT NOT NULL,
+    payload TEXT NOT NULL, -- JSON
+    response_status INTEGER,
+    response_body TEXT,
+    error TEXT,
+    delivered_at INTEGER DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY (webhook_id) REFERENCES webhooks(id) ON DELETE CASCADE
+);
+
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_projects_user_id ON projects(user_id);
 CREATE INDEX IF NOT EXISTS idx_project_members_project_id ON project_members(project_id);
@@ -192,6 +222,9 @@ CREATE INDEX IF NOT EXISTS idx_activity_log_entity ON activity_log(entity_type, 
 CREATE INDEX IF NOT EXISTS idx_activity_log_user_id ON activity_log(user_id);
 CREATE INDEX IF NOT EXISTS idx_activity_log_created_at ON activity_log(created_at);
 CREATE INDEX IF NOT EXISTS idx_change_orders_project_id ON change_orders(project_id);
+CREATE INDEX IF NOT EXISTS idx_webhooks_user_id ON webhooks(user_id);
+CREATE INDEX IF NOT EXISTS idx_webhooks_project_id ON webhooks(project_id);
+CREATE INDEX IF NOT EXISTS idx_webhook_deliveries_webhook_id ON webhook_deliveries(webhook_id);
 CREATE INDEX IF NOT EXISTS idx_portal_tokens_token ON portal_tokens(token);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
