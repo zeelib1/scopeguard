@@ -128,17 +128,81 @@ ScopeGuard provides:
 - Customer portal
 - Webhook automation
 
-### 🚀 Roadmap (Planned)
+### ✅ Advanced Features (Recently Added)
 
-- [ ] Email notifications (#13)
-- [ ] Slack/Discord webhooks (#19)
-- [ ] Dark mode (#21)
-- [ ] Keyboard shortcuts (#22)
-- [ ] Mobile responsive design (#23)
-- [ ] Request attachments (#24)
-- [ ] Time tracking per request (#25)
-- [ ] Client communication log (#26)
-- [ ] Automated weekly reports (#27)
+**Mobile & UX:**
+- ✅ Mobile responsive design (#23)
+- Breakpoints for tablets, phones, extra-small devices
+- Touch-friendly buttons (44px minimum)
+- Horizontal scrolling for tables
+- Landscape mode optimizations
+
+**Request Attachments:**
+- ✅ File uploads (#24)
+- Support for images, PDFs, Word, Excel, text files
+- Up to 5 files per request (10MB each)
+- Download and delete endpoints
+- Automatic cleanup on request deletion
+
+**Time Tracking:**
+- ✅ Track time per request (#25)
+- Start/stop timer functionality
+- Manual time entry editing
+- Prevent multiple active timers
+- Total time calculations per request/project
+- Cost calculations from hourly rates
+
+**Communication Logging:**
+- ✅ Client communication log (#26)
+- Track emails, calls, meetings, chats
+- Filter by type and date range
+- Communication statistics
+- Timeline view of all interactions
+
+**Automated Reports:**
+- ✅ Scope usage reports (#27)
+- Comprehensive project reports
+- Scope health scores (0-100)
+- Identify at-risk items (>80% usage)
+- Weekly digest reports
+- Plain text and JSON formats
+- Out-of-scope tracking
+
+**Priority Management:**
+- ✅ Request priority levels (#28)
+- Low, medium, high, urgent priorities
+- Default priority: medium
+- Priority-based sorting
+
+**Audit & Accountability:**
+- ✅ Activity audit log (#29)
+- Track all creates, updates, deletes
+- Before/after change tracking (JSON)
+- IP address and user agent logging
+- Filter by entity type, action, user, date
+
+**Budget Tracking:**
+- ✅ Project budget management (#30)
+- Budget amount and currency settings
+- Hourly rate configuration
+- Cost tracking (estimated vs actual)
+- Time-based cost calculations
+- Change order revenue tracking
+- Budget health monitoring (healthy/warning/critical/exceeded)
+- Profit calculations
+- User-wide budget summaries
+
+### 🚀 Roadmap (Future)
+
+- [ ] Email notifications (#31)
+- [ ] Scope item templates library (#32)
+- [ ] Multi-user team support (#33)
+- [ ] Client approval workflow (#34)
+- [ ] Webhook integrations (#35)
+- [ ] API rate limiting (#36)
+- [ ] Invoice integration (#37)
+- [ ] Dark mode
+- [ ] Keyboard shortcuts
 
 ---
 
