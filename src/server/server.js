@@ -28,6 +28,7 @@ const scopeItemRoutes = require('./routes/scopeItems');
 const requestRoutes = require('./routes/requests');
 const dashboardRoutes = require('./routes/dashboard');
 const changeOrderRoutes = require('./routes/changeOrders');
+const portalRoutes = require('./routes/portal');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
@@ -35,6 +36,7 @@ app.use('/api/projects/:projectId/scope-items', scopeItemRoutes);
 app.use('/api/projects/:projectId/requests', requestRoutes);
 app.use('/api/projects/:projectId/status', dashboardRoutes);
 app.use('/api/projects/:projectId/change-orders', changeOrderRoutes);
+app.use('/api', portalRoutes); // Portal routes (includes public endpoint)
 
 // API info endpoint
 app.get('/api', (req, res) => {
