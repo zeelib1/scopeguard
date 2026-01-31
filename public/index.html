@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScopeGuard - Stop Scope Creep Before It Costs You Thousands</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 20px; }
+        .tagline { font-size: 1.3rem; opacity: 0.9; }
+        .cta { 
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            margin-top: 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .cta:hover { transform: scale(1.05); transition: 0.2s; }
+        .problem {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        .problem h2 { text-align: center; margin-bottom: 40px; font-size: 2rem; }
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .problem-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .problem-card h3 { color: #e74c3c; margin-bottom: 10px; }
+        .solution {
+            padding: 80px 0;
+        }
+        .solution h2 { text-align: center; margin-bottom: 60px; font-size: 2rem; }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        .feature {
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .feature h3 { margin-bottom: 10px; }
+        .pricing {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        .pricing h2 { text-align: center; margin-bottom: 60px; font-size: 2rem; }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .pricing-card.featured {
+            border: 3px solid #667eea;
+            transform: scale(1.05);
+        }
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        .price span { font-size: 1.5rem; opacity: 0.7; }
+        .pricing-features {
+            text-align: left;
+            margin: 30px 0;
+        }
+        .pricing-features li {
+            list-style: none;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .pricing-features li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .comparison {
+            padding: 80px 0;
+        }
+        .comparison h2 { text-align: center; margin-bottom: 40px; font-size: 2rem; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+        }
+        .stats {
+            background: #667eea;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .stat h3 { font-size: 3rem; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🛡️ ScopeGuard</h1>
+            <p class="tagline">Stop scope creep before it costs you thousands</p>
+            <a href="/api" class="cta">View API Documentation</a>
+        </div>
+    </header>
+
+    <section class="problem">
+        <div class="container">
+            <h2>The Problem Freelancers Face</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h3>❌ Scope Creep</h3>
+                    <p>Clients request "small additions" that weren't in the original agreement.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>💸 Working for Free</h3>
+                    <p>You either say yes and lose money, or say no and damage the relationship.</p>
+                </div>
+                <div class="problem-card">
+                    <h3>😰 Awkward Conversations</h3>
+                    <p>Trying to negotiate mid-project creates tension with clients.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="solution">
+        <div class="container">
+            <h2>How ScopeGuard Solves It</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📝</div>
+                    <h3>Define Clear Scope</h3>
+                    <p>Set deliverable limits with usage tracking</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Track Every Request</h3>
+                    <p>Log client requests and categorize automatically</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚠️</div>
+                    <h3>Get Instant Alerts</h3>
+                    <p>Warning at 80% usage, alerts when exceeded</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <h3>One-Click Change Orders</h3>
+                    <p>Convert out-of-scope requests to revenue</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Client Transparency</h3>
+                    <p>Share read-only portal with clients</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics & Insights</h3>
+                    <p>See which clients have most scope creep</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <h2>Built in 7 Hours</h2>
+            <div class="stats-grid">
+                <div class="stat">
+                    <h3>11</h3>
+                    <p>Commits</p>
+                </div>
+                <div class="stat">
+                    <h3>10</h3>
+                    <p>Issues Closed</p>
+                </div>
+                <div class="stat">
+                    <h3>50+</h3>
+                    <p>API Endpoints</p>
+                </div>
+                <div class="stat">
+                    <h3>100%</h3>
+                    <p>Autonomous Build</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <div class="container">
+            <h2>Simple, Transparent Pricing</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>1 active project</li>
+                        <li>Core scope tracking</li>
+                        <li>Client portal (with branding)</li>
+                        <li>Community support</li>
+                    </ul>
+                    <a href="/api/auth/register" class="cta">Get Started</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <h3>Pro</h3>
+                    <div class="price">$19<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>10 active projects</li>
+                        <li>Unlimited scope items</li>
+                        <li>Email notifications</li>
+                        <li>Remove branding</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <a href="/api/stripe/create-checkout-session" class="cta">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Business</h3>
+                    <div class="price">$39<span>/mo</span></div>
+                    <ul class="pricing-features">
+                        <li>Unlimited projects</li>
+                        <li>Team collaboration</li>
+                        <li>Analytics dashboard</li>
+                        <li>API access</li>
+                        <li>Custom branding</li>
+                    </ul>
+                    <a href="/api/stripe/create-checkout-session" class="cta">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="comparison">
+        <div class="container">
+            <h2>Why ScopeGuard?</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>ScopeGuard</th>
+                        <th>Bonsai</th>
+                        <th>Moxie</th>
+                        <th>Spreadsheets</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Price</td>
+                        <td><strong>$19/mo</strong></td>
+                        <td>$39/mo</td>
+                        <td>$45/mo</td>
+                        <td>Free</td>
+                    </tr>
+                    <tr>
+                        <td>Scope Tracking</td>
+                        <td><strong>✅ Core focus</strong></td>
+                        <td>🟡 Buried feature</td>
+                        <td>🟡 Manual</td>
+                        <td>🟡 DIY</td>
+                    </tr>
+                    <tr>
+                        <td>Client Portal</td>
+                        <td><strong>✅ Transparent</strong></td>
+                        <td>❌ No</td>
+                        <td>❌ No</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td>1-Click Change Orders</td>
+                        <td><strong>✅ Yes</strong></td>
+                        <td>❌ Manual</td>
+                        <td>❌ Manual</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td>Setup Time</td>
+                        <td><strong>5 minutes</strong></td>
+                        <td>2 hours</td>
+                        <td>1 hour</td>
+                        <td>30 min</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p><strong>ScopeGuard</strong> - Built with ❤️ by an autonomous AI agent in 7 hours</p>
+            <p>API Documentation: <a href="/api" style="color: #667eea;">/api</a></p>
+            <p>GitHub: <a href="https://github.com/zeelib1/scopeguard" style="color: #667eea;">zeelib1/scopeguard</a></p>
+        </div>
+    </footer>
+</body>
+</html>

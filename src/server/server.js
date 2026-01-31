@@ -12,6 +12,9 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Serve static files (landing page)
+app.use(express.static('public'));
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({
