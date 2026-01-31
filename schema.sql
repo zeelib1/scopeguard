@@ -21,6 +21,9 @@ CREATE TABLE IF NOT EXISTS projects (
     project_name TEXT NOT NULL,
     description TEXT,
     status TEXT DEFAULT 'active', -- active, completed, archived
+    budget_amount REAL, -- Total project budget
+    budget_currency TEXT DEFAULT 'USD',
+    hourly_rate REAL, -- Hourly rate for time tracking
     created_at INTEGER DEFAULT (strftime('%s', 'now')),
     updated_at INTEGER DEFAULT (strftime('%s', 'now')),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -46,6 +49,8 @@ CREATE TABLE IF NOT EXISTS requests (
     source TEXT, -- "email", "slack", "call", "meeting"
     status TEXT DEFAULT 'pending', -- pending, in-scope, out-of-scope, change-order-sent
     priority TEXT DEFAULT 'medium', -- low, medium, high, urgent
+    estimated_cost REAL, -- Estimated cost for this request
+    actual_cost REAL, -- Actual cost after completion
     scope_item_id INTEGER, -- NULL if out-of-scope
     requested_at INTEGER DEFAULT (strftime('%s', 'now')),
     reviewed_at INTEGER,
