@@ -141,6 +141,10 @@
     <div v-if="activeTab === 'Budget'">
       <BudgetGauge :projectId="project.id" />
     </div>
+
+    <div v-if="activeTab === 'Time'">
+      <TimeTracker :projectId="project.id" />
+    </div>
   </div>
 </template>
 
@@ -165,7 +169,7 @@ const showRequestForm = ref(false)
 const showChangeOrderForm = ref(false)
 const selectedRequests = ref<number[]>([])
 
-const tabs = ['Overview', 'Requests', 'Scope Items', 'Change Orders', 'Budget']
+const tabs = ['Overview', 'Requests', 'Scope Items', 'Change Orders', 'Budget', 'Time']
 
 const approvedRequests = computed(() => {
   return requests.value.filter((r: any) => r.status === 'approved')

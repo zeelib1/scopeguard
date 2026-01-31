@@ -89,10 +89,35 @@ onMounted(async () => {
     const response: any = await api.getProjects()
     projects.value = response.projects || []
     
-    // Calculate stats (simplified)
-    stats.value.pending = Math.floor(Math.random() * 10)
-    stats.value.changeOrders = Math.floor(Math.random() * 5)
-    stats.value.revenue = Math.floor(Math.random() * 50000)
+    // Calculate real stats from projects
+    let totalPending = 0
+    let totalChangeOrders = 0
+    let totalRevenue = 0
+    
+    // Fetch detailed data for each project to get accurate stats
+    for (const project of projects.value) {
+      try {
+        const [reqRes, coRes]: any[] = await Promise.all([
+          api.getRequests(project.id),
+          api.getChangeOrders(project.id)
+        ])
+        
+        const pendingReqs = (reqRes.requests || []).filter((r: any) => r.status === 'pending')
+        totalPending += pendingReqs.length
+        
+        const changeOrders = coRes.changeOrders || []
+        totalChangeOrders += changeOrders.length
+        
+        // Calculate revenue protected (sum of change order costs)
+        totalRevenue += changeOrders.reduce((sum: number, co: any) => sum + (co.additional_cost || 0), 0)
+      } catch (err) {
+        console.error(`Failed to load stats for project ${project.id}`, err)
+      }
+    }
+    
+    stats.value.pending = totalPending
+    stats.value.changeOrders = totalChangeOrders
+    stats.value.revenue = totalRevenue
   } finally {
     loading.value = false
   }
