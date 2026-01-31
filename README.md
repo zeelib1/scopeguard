@@ -2,627 +2,338 @@
 
 **Stop scope creep before it costs you thousands.**
 
-Simple, powerful scope tracking for freelancers and small agencies. Built in 7 hours by an autonomous AI agent.
-
-[![GitHub](https://img.shields.io/badge/repo-scopeguard-blue)](https://github.com/zeelib1/scopeguard)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+ScopeGuard is a professional scope management tool for freelancers and agencies. Track client requests, define clear boundaries, and automatically generate change orders for out-of-scope work.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Tech Stack
 
-```bash
-# Clone repository
-git clone https://github.com/zeelib1/scopeguard.git
-cd scopeguard
+### Backend
+- **Node.js** + **Express** - REST API
+- **SQLite** (via better-sqlite3) - Database
+- **TypeScript** - Type safety (conversion in progress)
+- **JWT** - Authentication
+- **Stripe** - Payments integration
 
-# Install dependencies
-npm install
-
-# Set up environment
-cp .env.example .env
-# Edit .env with your configuration
-
-# Initialize database
-npm run db:init
-
-# Start server
-npm start
-```
-
-Server runs on `http://localhost:3000`
-
-**Test Credentials:**
-- Email: `test@scopeguard.app`
-- Password: `password123`
+### Frontend
+- **Nuxt 3** - Vue.js framework
+- **TypeScript** - Full type safety
+- **TailwindCSS** - Styling
+- **Pinia** - State management
+- **Auto-imports** - Composables & components
 
 ---
 
-## 📋 Table of Contents
+## ✨ Features
 
-- [The Problem](#the-problem)
-- [The Solution](#the-solution)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [API Documentation](#api-documentation)
-- [Usage Examples](#usage-examples)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [Roadmap](#roadmap)
+### Core Features
+- ✅ **User Authentication** (JWT)
+- ✅ **Project Management** (CRUD operations)
+- ✅ **Scope Item Tracking** (define limits, track usage)
+- ✅ **Client Request Classification** (in-scope / out-of-scope)
+- ✅ **Change Order Generation** (automatic pricing)
+- ✅ **Budget Tracking** (real-time calculations)
+- ✅ **Time Tracking** (start/stop timers)
+- ✅ **Team Collaboration** (role-based access)
+- ✅ **Communication Logs** (email, Slack, meetings)
+- ✅ **Activity Logging** (audit trail)
+- ✅ **Reports & Analytics** (weekly digests)
+- ✅ **Webhook Integrations** (Slack, Discord, custom)
+- ✅ **Client Portal** (public scope viewer)
+- ✅ **File Attachments** (request documentation)
+- ✅ **Bulk Operations** (process multiple requests)
+- ✅ **Project Templates** (quick setup)
+- ✅ **Export Tools** (Markdown, JSON)
 
----
-
-## The Problem
-
-Freelancers lose thousands of dollars annually to **scope creep** - clients requesting "small additions" that weren't in the original agreement.
-
-Your options are all bad:
-- ✗ Say yes → work for free
-- ✗ Say no → damage relationship
-- ✗ Negotiate mid-project → awkward & unprofessional
-
-**The result:** Lost revenue, burnout, and client friction.
-
----
-
-## The Solution
-
-ScopeGuard provides:
-
-1. **Crystal-clear scope definition** - Define deliverables with measurable limits
-2. **Automatic tracking** - Log every client request, categorize automatically
-3. **Real-time alerts** - Warning at 80% usage, alerts when exceeded
-4. **One-click change orders** - Convert overage into revenue instantly
-5. **Client transparency** - Share read-only portal to reduce arguments
-6. **Revenue analytics** - See how much scope tracking saves you
+### Frontend Features
+- ✅ **Dashboard** (overview stats, quick actions)
+- ✅ **Projects List & Detail** (full project view)
+- ✅ **Request Management** (approve/reject workflow)
+- ✅ **Change Order Review** (cost preview, status tracking)
+- ✅ **Budget Visualization** (gauges, health indicators)
+- ✅ **Team Management** (invite members, role management)
+- ✅ **Settings** (profile, notifications, webhooks)
+- ✅ **Reports** (weekly digest, scope health)
+- ✅ **Responsive Design** (mobile-first)
+- ✅ **Professional UI** (modern SaaS design)
 
 ---
 
-## Features
-
-### ✅ Core Features (Implemented)
-
-**Project Management:**
-- Create & manage unlimited projects
-- 8 pre-built templates (website, logo, blog, app, etc.)
-- Project status dashboard with health scores
-- Multi-project tracking
-
-**Scope Definition:**
-- Define scope items with limits (count or hours)
-- Real-time usage tracking
-- Visual progress indicators (green/yellow/red)
-- Automatic warnings (80%+ usage)
-- Exceeded detection & alerts
-
-**Request Tracking:**
-- Log all client requests with timestamps
-- Source tracking (email, Slack, call, meeting)
-- Smart categorization (in-scope vs out-of-scope)
-- Auto-link requests to scope items
-- Bulk operations (categorize/delete/update multiple)
-
-**Change Order Management:**
-- One-click generation from out-of-scope requests
-- Batch conversion (multiple requests → single order)
-- Approval workflow (pending/approved/rejected)
-- Revenue tracking (approved vs potential)
-
-**Analytics & Reporting:**
-- Overall analytics (projects, requests, revenue)
-- Client-level scope creep analysis
-- Trend data over time
-- Scope health monitoring
-- Export to Markdown & CSV
-
-**Client Portal:**
-- Generate shareable links (secure tokens)
-- Read-only transparency
-- Real-time project status
-- Token management (create/revoke/expiry)
-
-**Monetization:**
-- Stripe subscription integration
-- Two tiers: Pro ($19/mo), Business ($39/mo)
-- Customer portal
-- Webhook automation
-
-### ✅ Advanced Features (Recently Added)
-
-**Mobile & UX:**
-- ✅ Mobile responsive design (#23)
-- Breakpoints for tablets, phones, extra-small devices
-- Touch-friendly buttons (44px minimum)
-- Horizontal scrolling for tables
-- Landscape mode optimizations
-
-**Request Attachments:**
-- ✅ File uploads (#24)
-- Support for images, PDFs, Word, Excel, text files
-- Up to 5 files per request (10MB each)
-- Download and delete endpoints
-- Automatic cleanup on request deletion
-
-**Time Tracking:**
-- ✅ Track time per request (#25)
-- Start/stop timer functionality
-- Manual time entry editing
-- Prevent multiple active timers
-- Total time calculations per request/project
-- Cost calculations from hourly rates
-
-**Communication Logging:**
-- ✅ Client communication log (#26)
-- Track emails, calls, meetings, chats
-- Filter by type and date range
-- Communication statistics
-- Timeline view of all interactions
-
-**Automated Reports:**
-- ✅ Scope usage reports (#27)
-- Comprehensive project reports
-- Scope health scores (0-100)
-- Identify at-risk items (>80% usage)
-- Weekly digest reports
-- Plain text and JSON formats
-- Out-of-scope tracking
-
-**Priority Management:**
-- ✅ Request priority levels (#28)
-- Low, medium, high, urgent priorities
-- Default priority: medium
-- Priority-based sorting
-
-**Audit & Accountability:**
-- ✅ Activity audit log (#29)
-- Track all creates, updates, deletes
-- Before/after change tracking (JSON)
-- IP address and user agent logging
-- Filter by entity type, action, user, date
-
-**Budget Tracking:**
-- ✅ Project budget management (#30)
-- Budget amount and currency settings
-- Hourly rate configuration
-- Cost tracking (estimated vs actual)
-- Time-based cost calculations
-- Change order revenue tracking
-- Budget health monitoring (healthy/warning/critical/exceeded)
-- Profit calculations
-- User-wide budget summaries
-
-### 🚀 Roadmap (Future)
-
-- [ ] Email notifications (#31)
-- [ ] Scope item templates library (#32)
-- [ ] Multi-user team support (#33)
-- [ ] Client approval workflow (#34)
-- [ ] Webhook integrations (#35)
-- [ ] API rate limiting (#36)
-- [ ] Invoice integration (#37)
-- [ ] Dark mode
-- [ ] Keyboard shortcuts
-
----
-
-## Tech Stack
-
-**Backend:**
-- Node.js v22+
-- Express.js (REST API)
-- SQLite (better-sqlite3)
-- JWT authentication
-- bcrypt password hashing
-
-**Payments:**
-- Stripe Checkout
-- Subscription webhooks
-
-**Database:**
-- 7 core tables
-- Foreign key constraints
-- Indexed queries
-- Pre-computed views
-
-**API:**
-- 60+ endpoints
-- RESTful design
-- CORS enabled
-- Comprehensive error handling
-
----
-
-## Installation
+## 🛠️ Setup Instructions
 
 ### Prerequisites
+- Node.js 18+ and npm
+- SQLite3
 
-- Node.js 18+ (22+ recommended)
-- npm or yarn
-- Git
+### Installation
 
-### Local Development
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/zeelib1/scopeguard.git
+   cd scopeguard
+   ```
 
-```bash
-# 1. Clone repository
-git clone https://github.com/zeelib1/scopeguard.git
-cd scopeguard
+2. **Install dependencies:**
+   ```bash
+   npm install
+   cd frontend && npm install && cd ..
+   ```
 
-# 2. Install dependencies
-npm install
+3. **Configure environment:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your settings
+   ```
 
-# 3. Configure environment
-cp .env.example .env
+4. **Initialize database:**
+   ```bash
+   npm run db:init
+   ```
 
-# Edit .env:
-# - Set JWT_SECRET
-# - Add Stripe keys (optional for testing)
-# - Configure database path
+5. **Start development servers:**
+   ```bash
+   npm run dev
+   ```
 
-# 4. Initialize database with seed data
-npm run db:init
+   This starts:
+   - **Backend API** at `http://localhost:3001`
+   - **Frontend** at `http://localhost:3000`
 
-# 5. Start development server
-npm run dev
-
-# Server available at http://localhost:3000
-# API docs at http://localhost:3000/api
+### Test Credentials
 ```
-
-### Production Setup
-
-```bash
-# 1. Set NODE_ENV=production
-export NODE_ENV=production
-
-# 2. Use strong JWT secret
-export JWT_SECRET="your-cryptographically-secure-secret"
-
-# 3. Configure Stripe (live keys)
-export STRIPE_SECRET_KEY="sk_live_..."
-export STRIPE_PUBLISHABLE_KEY="pk_live_..."
-export STRIPE_WEBHOOK_SECRET="whsec_..."
-
-# 4. Start server
-npm start
+Email: test@scopeguard.app
+Password: password123
 ```
 
 ---
 
-## API Documentation
+## 📁 Project Structure
+
+```
+scopeguard/
+├── src/
+│   ├── database/
+│   │   ├── db.js/.ts           # Database connection
+│   │   └── init.js/.ts         # Database initialization
+│   ├── server/
+│   │   ├── middleware/
+│   │   │   └── auth.js/.ts     # JWT authentication
+│   │   ├── models/             # 17 database models
+│   │   │   ├── User.js/.ts
+│   │   │   ├── Project.js/.ts
+│   │   │   ├── Request.js/.ts
+│   │   │   ├── ChangeOrder.js/.ts
+│   │   │   └── ...
+│   │   ├── routes/             # 18 API route files
+│   │   │   ├── auth.js/.ts
+│   │   │   ├── projects.js/.ts
+│   │   │   ├── requests.js/.ts
+│   │   │   └── ...
+│   │   └── server.js/.ts       # Express app
+│   └── types/                  # TypeScript definitions
+│       └── index.ts
+├── frontend/                   # Nuxt 3 application
+│   ├── assets/
+│   │   └── css/                # TailwindCSS
+│   ├── components/             # Vue components
+│   │   ├── ProjectCard.vue
+│   │   ├── StatusBadge.vue
+│   │   ├── RequestItem.vue
+│   │   ├── ChangeOrderCard.vue
+│   │   └── BudgetGauge.vue
+│   ├── composables/            # Composables
+│   │   └── useApi.ts           # API client
+│   ├── layouts/
+│   │   └── default.vue         # Main layout
+│   ├── middleware/
+│   │   └── auth.ts             # Auth guard
+│   ├── pages/                  # Routes
+│   │   ├── index.vue           # Dashboard
+│   │   ├── login.vue
+│   │   ├── register.vue
+│   │   ├── projects/
+│   │   │   ├── index.vue       # Projects list
+│   │   │   └── [id].vue        # Project detail
+│   │   ├── team.vue
+│   │   ├── settings.vue
+│   │   └── reports.vue
+│   ├── stores/
+│   │   └── auth.ts             # Pinia auth store
+│   └── nuxt.config.ts
+├── data/                       # SQLite database
+├── schema.sql                  # Database schema
+└── package.json
+```
+
+---
+
+## 🔌 API Endpoints
 
 ### Authentication
-
-**Register:**
-```bash
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "full_name": "John Doe"
-}
-
-# Response: { user, token }
-```
-
-**Login:**
-```bash
-POST /api/auth/login
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-
-# Response: { user, token }
-```
-
-**Protected Routes:**
-```bash
-Authorization: Bearer <token>
-```
+- `POST /api/auth/register` - Create account
+- `POST /api/auth/login` - Login
+- `GET /api/auth/me` - Get current user
 
 ### Projects
-
-```bash
-# List projects
-GET /api/projects
-
-# Create project
-POST /api/projects
-{
-  "client_name": "Acme Corp",
-  "project_name": "Website Redesign",
-  "description": "5-page website with 3 revisions"
-}
-
-# Get project with stats
-GET /api/projects/:id
-
-# Update project
-PUT /api/projects/:id
-
-# Delete project
-DELETE /api/projects/:id
-```
-
-### Scope Items
-
-```bash
-# List scope items
-GET /api/projects/:projectId/scope-items
-
-# Create scope item
-POST /api/projects/:projectId/scope-items
-{
-  "description": "Homepage designs",
-  "limit_value": 3,
-  "limit_type": "count"
-}
-
-# Get item with usage stats
-GET /api/projects/:projectId/scope-items/:id
-```
+- `GET /api/projects` - List projects
+- `POST /api/projects` - Create project
+- `GET /api/projects/:id` - Get project
+- `PUT /api/projects/:id` - Update project
+- `DELETE /api/projects/:id` - Delete project
 
 ### Requests
-
-```bash
-# List requests
-GET /api/projects/:projectId/requests
-
-# Create request
-POST /api/projects/:projectId/requests
-{
-  "description": "Add contact form to about page",
-  "source": "email",
-  "status": "pending"
-}
-
-# Categorize request
-POST /api/projects/:projectId/requests/:id/categorize
-{
-  "status": "in-scope",  # or "out-of-scope"
-  "scope_item_id": 1
-}
-```
+- `GET /api/projects/:id/requests` - List requests
+- `POST /api/projects/:id/requests` - Create request
+- `PUT /api/projects/:id/requests/:id` - Update request
 
 ### Change Orders
+- `GET /api/projects/:id/change-orders` - List change orders
+- `POST /api/projects/:id/change-orders` - Create change order
+- `POST /api/projects/:id/change-orders/:id/approve` - Approve
 
+### Dashboard
+- `GET /api/projects/:id/status` - Project overview
+
+### Budget
+- `GET /api/budget/project/:id` - Budget details
+
+[See API_TESTING.md for complete API documentation]
+
+---
+
+## 🧪 Development Workflow
+
+### Running Backend Only
 ```bash
-# Create change order
-POST /api/projects/:projectId/change-orders
-{
-  "title": "Additional Pages",
-  "price": 500,
-  "request_ids": [1, 2, 3]
-}
-
-# Generate from out-of-scope requests
-POST /api/projects/:projectId/change-orders/generate
-{
-  "request_ids": [4, 5],
-  "title": "Blog Section",
-  "price": 300
-}
-
-# Approve/reject
-POST /api/projects/:projectId/change-orders/:id/approve
-POST /api/projects/:projectId/change-orders/:id/reject
+npm run dev:backend
 ```
 
-### Analytics
-
+### Running Frontend Only
 ```bash
-# Overall analytics
-GET /api/analytics/overview
-
-# Client-level analysis
-GET /api/analytics/clients
-
-# Trends (default: 30 days)
-GET /api/analytics/trends?period=30
-
-# Scope health
-GET /api/analytics/scope-health
+npm run dev:frontend
 ```
 
-### Export
-
+### Running Both (Recommended)
 ```bash
-# Export project report (Markdown)
-GET /api/projects/:projectId/export/markdown
-
-# Export requests (CSV)
-GET /api/projects/:projectId/export/csv
+npm run dev
 ```
 
-### Bulk Operations
-
+### Building for Production
 ```bash
-# Bulk categorize
-POST /api/projects/:projectId/bulk/categorize
-{
-  "request_ids": [1, 2, 3],
-  "status": "out-of-scope"
-}
-
-# Bulk create change order
-POST /api/projects/:projectId/bulk/create-change-order
-{
-  "request_ids": [4, 5, 6],
-  "title": "Additional Features",
-  "price": 750
-}
+npm run build           # Builds frontend
+npm run build:backend   # (TypeScript conversion in progress)
 ```
 
----
-
-## Usage Examples
-
-### Example 1: Tracking a Website Project
-
+### Database Management
 ```bash
-# 1. Create project
-POST /api/projects
-{
-  "client_name": "TechStartup Inc",
-  "project_name": "Website Redesign"
-}
-
-# 2. Define scope
-POST /api/projects/1/scope-items
-{ "description": "Homepage design", "limit_value": 1 }
-
-POST /api/projects/1/scope-items
-{ "description": "Internal pages", "limit_value": 4 }
-
-POST /api/projects/1/scope-items
-{ "description": "Revision rounds", "limit_value": 3 }
-
-# 3. Log client requests
-POST /api/projects/1/requests
-{
-  "description": "Update hero section",
-  "source": "email"
-}
-
-# 4. Categorize as in-scope
-POST /api/projects/1/requests/1/categorize
-{
-  "status": "in-scope",
-  "scope_item_id": 3  # Counts as 1 revision
-}
-
-# 5. Client requests out-of-scope item
-POST /api/projects/1/requests
-{
-  "description": "Add blog section (not in original scope)",
-  "source": "meeting"
-}
-
-POST /api/projects/1/requests/2/categorize
-{
-  "status": "out-of-scope"
-}
-
-# 6. Generate change order
-POST /api/projects/1/change-orders/generate
-{
-  "request_ids": [2],
-  "title": "Blog Section Addition",
-  "price": 500
-}
-
-# 7. Share portal with client
-POST /api/projects/1/portal/generate
-{
-  "expires_in_days": 30
-}
-
-# Response: { token: "abc123...", url: "/portal/abc123..." }
+npm run db:init         # Initialize/reset database
 ```
 
 ---
 
-## Deployment
+## 🎨 Frontend Development
 
-### Railway / Render / Fly.io
+The Nuxt frontend is fully TypeScript with:
+- **Auto-imports** for composables and components
+- **File-based routing** (`pages/` directory)
+- **Layouts** (default layout with sidebar)
+- **Middleware** (auth protection)
+- **Pinia stores** (auth state)
+- **TailwindCSS utility classes**
 
+### Key Composables
+- `useApi()` - API client with auth headers
+- `useAuthStore()` - Authentication state
+
+### Creating New Pages
+1. Add file to `frontend/pages/`
+2. Add `definePageMeta({ layout: 'default', middleware: 'auth' })`
+3. Component auto-imported
+
+---
+
+## 🔒 Environment Variables
+
+```env
+# Backend
+PORT=3001
+JWT_SECRET=your-secret-key-here
+FRONTEND_URL=http://localhost:3000
+DATABASE_PATH=./data/scopeguard.db
+
+# Stripe (optional)
+STRIPE_SECRET_KEY=sk_test_...
+
+# Frontend
+NUXT_PUBLIC_API_BASE=http://localhost:3001/api
+```
+
+---
+
+## 📊 Database Schema
+
+17 tables including:
+- `users` - User accounts
+- `projects` - Client projects
+- `scope_items` - Defined scope limits
+- `requests` - Client requests
+- `change_orders` - Pricing for out-of-scope work
+- `budgets` - Budget tracking
+- `time_entries` - Time tracking
+- `communication_logs` - Communication history
+- `activity_log` - Audit trail
+- `webhooks` - Integrations
+- [See schema.sql for complete schema]
+
+---
+
+## 🚢 Deployment
+
+### Backend
 ```bash
-# 1. Set environment variables in platform dashboard
-NODE_ENV=production
-JWT_SECRET=your-secret
-STRIPE_SECRET_KEY=sk_live_...
-
-# 2. Deploy
-git push origin main
-
-# Platform auto-detects Node.js and runs npm start
+npm start  # Runs on PORT 3001
 ```
 
-### Docker
-
-```dockerfile
-FROM node:22-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run db:init
-EXPOSE 3000
-CMD ["npm", "start"]
+### Frontend
+```bash
+cd frontend
+npm run build
+npm run preview
 ```
 
----
-
-## Contributing
-
-Contributions welcome! This was built autonomously in 7 hours as a proof-of-concept.
-
-**Priority areas:**
-- React frontend
-- Mobile app
-- Email notifications
-- Advanced analytics
+For production, use:
+- **Backend:** PM2, Docker, or Node.js hosting
+- **Frontend:** Vercel, Netlify, or static hosting
 
 ---
 
-## Roadmap
+## 🤝 Contributing
 
-**Q2 2026:**
-- React web app
-- Mobile apps (iOS/Android)
-- Email integration
-- Zapier webhooks
-
-**Q3 2026:**
-- AI-powered scope suggestions
-- Multi-language support
-- Team collaboration
-
-**Q4 2026:**
-- Enterprise features
-- White-label options
-- SSO integration
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
 ---
 
-## Why ScopeGuard?
+## 📝 License
 
-| Feature | ScopeGuard | Bonsai | Moxie | Spreadsheets |
-|---------|-----------|--------|-------|--------------|
-| **Price** | **$19/mo** | $39/mo | $45/mo | Free |
-| **Scope Focus** | **✅ Core** | 🟡 Buried | 🟡 Manual | 🟡 DIY |
-| **Client Portal** | **✅ Yes** | ❌ No | ❌ No | ❌ No |
-| **1-Click Change Orders** | **✅ Yes** | ❌ Manual | ❌ Manual | ❌ No |
-| **Analytics** | **✅ Built-in** | 🟡 Limited | 🟡 Basic | ❌ No |
-| **Setup Time** | **5 min** | 2 hours | 1 hour | 30 min |
+MIT License - see LICENSE file
 
 ---
 
-## License
+## 🙏 Acknowledgments
 
-MIT License - See [LICENSE](LICENSE) file
-
----
-
-## Credits
-
-**Built in 7 hours by an autonomous AI agent** as part of the Autonomous Venture Architect experiment.
-
-- 📊 15 commits
-- 🎫 27 issues (14 closed, 13 roadmap)
-- 💻 60+ API endpoints
-- 📈 Full monetization ready
-
-**Start Date:** January 30, 2026  
-**Duration:** 73 minutes (so far)  
-**Status:** Production-ready MVP
+Built with ❤️ by AI
+- Backend: Express + SQLite
+- Frontend: Nuxt 3 + TailwindCSS
+- Full-stack TypeScript
 
 ---
 
-**Questions? Issues? Contributions?**  
-📧 Create an issue on GitHub  
-🌐 Visit the live demo (coming soon)  
-📚 Read the [full feature list](FEATURES.md)
+## 📧 Support
+
+For questions or issues, please open an issue on GitHub.
+
+**Project Repository:** https://github.com/zeelib1/scopeguard
