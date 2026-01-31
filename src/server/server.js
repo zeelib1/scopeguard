@@ -37,6 +37,7 @@ const activityLogRoutes = require('./routes/activityLog');
 const budgetRoutes = require('./routes/budget');
 const portalRoutes = require('./routes/portal');
 const templateRoutes = require('./routes/templates');
+const scopeTemplatesRoutes = require('./routes/scopeTemplates');
 const stripeRoutes = require('./routes/stripe');
 const analyticsRoutes = require('./routes/analytics');
 const exportRoutes = require('./routes/export');
@@ -55,6 +56,7 @@ app.use('/api/reports', reportsRoutes);
 app.use('/api/activity', activityLogRoutes);
 app.use('/api/budget', budgetRoutes);
 app.use('/api/templates', templateRoutes);
+app.use('/api/scope-templates', scopeTemplatesRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api', portalRoutes); // Portal routes (includes public endpoint)
