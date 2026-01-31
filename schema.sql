@@ -95,6 +95,20 @@ CREATE TABLE IF NOT EXISTS communication_logs (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+-- Activity audit log (track all changes)
+CREATE TABLE IF NOT EXISTS activity_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    entity_type TEXT NOT NULL, -- project, request, scope_item, change_order, etc.
+    entity_id INTEGER NOT NULL,
+    action TEXT NOT NULL, -- created, updated, deleted, status_changed
+    changes TEXT, -- JSON object with before/after values
+    ip_address TEXT,
+    user_agent TEXT,
+    created_at INTEGER DEFAULT (strftime('%s', 'now')),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
 -- Change orders (generated from out-of-scope requests)
 CREATE TABLE IF NOT EXISTS change_orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -148,6 +162,9 @@ CREATE INDEX IF NOT EXISTS idx_time_entries_request_id ON time_entries(request_i
 CREATE INDEX IF NOT EXISTS idx_time_entries_user_id ON time_entries(user_id);
 CREATE INDEX IF NOT EXISTS idx_communication_logs_project_id ON communication_logs(project_id);
 CREATE INDEX IF NOT EXISTS idx_communication_logs_occurred_at ON communication_logs(occurred_at);
+CREATE INDEX IF NOT EXISTS idx_activity_log_entity ON activity_log(entity_type, entity_id);
+CREATE INDEX IF NOT EXISTS idx_activity_log_user_id ON activity_log(user_id);
+CREATE INDEX IF NOT EXISTS idx_activity_log_created_at ON activity_log(created_at);
 CREATE INDEX IF NOT EXISTS idx_change_orders_project_id ON change_orders(project_id);
 CREATE INDEX IF NOT EXISTS idx_portal_tokens_token ON portal_tokens(token);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
