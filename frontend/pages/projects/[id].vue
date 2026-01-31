@@ -56,13 +56,46 @@
 
     <div v-if="activeTab === 'Requests'" class="space-y-4">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="font-bold text-lg">Client Requests</h3>
+        <div class="flex gap-2">
+          <button 
+            v-if="selectedRequests.length" 
+            @click="bulkApprove" 
+            class="btn btn-sm bg-green-600 text-white hover:bg-green-700"
+          >
+            ✓ Approve Selected ({{ selectedRequests.length }})
+          </button>
+          <button 
+            v-if="selectedRequests.length" 
+            @click="bulkReject" 
+            class="btn btn-sm bg-red-600 text-white hover:bg-red-700"
+          >
+            ✗ Reject Selected ({{ selectedRequests.length }})
+          </button>
+        </div>
         <button class="btn btn-primary btn-sm" @click="showRequestForm = true">+ New Request</button>
       </div>
       <div v-if="requests.length === 0" class="card text-center py-8 text-gray-600">
         No requests yet
       </div>
-      <RequestItem v-for="req in requests" :key="req.id" :request="req" />
+      <div v-else class="space-y-2">
+        <div v-for="req in requests" :key="req.id" class="flex items-start gap-2">
+          <input 
+            type="checkbox" 
+            :value="req.id" 
+            v-model="selectedRequests" 
+            class="mt-1"
+            v-if="req.status === 'pending'"
+          />
+          <RequestItem :request="req" @update="loadRequests" class="flex-1" />
+        </div>
+      </div>
+      
+      <!-- Request Form Modal -->
+      <div v-if="showRequestForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" @click.self="showRequestForm = false">
+        <div class="max-w-2xl w-full">
+          <RequestForm :projectId="projectId" @success="handleRequestSuccess" @cancel="showRequestForm = false" />
+        </div>
+      </div>
     </div>
 
     <div v-if="activeTab === 'Scope Items'">
@@ -85,12 +118,24 @@
     <div v-if="activeTab === 'Change Orders'">
       <div class="flex justify-between items-center mb-4">
         <h3 class="font-bold text-lg">Change Orders</h3>
-        <button class="btn btn-primary btn-sm">+ Create Change Order</button>
+        <button class="btn btn-primary btn-sm" @click="showChangeOrderForm = true">+ Create Change Order</button>
       </div>
       <div v-if="changeOrders.length === 0" class="card text-center py-8 text-gray-600">
         No change orders yet
       </div>
       <ChangeOrderCard v-for="co in changeOrders" :key="co.id" :changeOrder="co" />
+      
+      <!-- Change Order Form Modal -->
+      <div v-if="showChangeOrderForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" @click.self="showChangeOrderForm = false">
+        <div class="max-w-2xl w-full">
+          <ChangeOrderForm 
+            :projectId="projectId" 
+            :approvedRequests="approvedRequests"
+            @success="handleChangeOrderSuccess" 
+            @cancel="showChangeOrderForm = false" 
+          />
+        </div>
+      </div>
     </div>
 
     <div v-if="activeTab === 'Budget'">
@@ -117,8 +162,67 @@ const changeOrders = ref([])
 const loading = ref(true)
 const activeTab = ref('Overview')
 const showRequestForm = ref(false)
+const showChangeOrderForm = ref(false)
+const selectedRequests = ref<number[]>([])
 
 const tabs = ['Overview', 'Requests', 'Scope Items', 'Change Orders', 'Budget']
+
+const approvedRequests = computed(() => {
+  return requests.value.filter((r: any) => r.status === 'approved')
+})
+
+const loadRequests = async () => {
+  const res: any = await api.getRequests(projectId)
+  requests.value = res.requests || []
+}
+
+const loadChangeOrders = async () => {
+  const res: any = await api.getChangeOrders(projectId)
+  changeOrders.value = res.changeOrders || []
+}
+
+const handleRequestSuccess = async () => {
+  showRequestForm.value = false
+  await loadRequests()
+}
+
+const handleChangeOrderSuccess = async () => {
+  showChangeOrderForm.value = false
+  await loadChangeOrders()
+  await loadRequests()
+}
+
+const bulkApprove = async () => {
+  if (!confirm(`Approve ${selectedRequests.value.length} requests?`)) return
+  
+  try {
+    await Promise.all(
+      selectedRequests.value.map(id => 
+        api.updateRequest(projectId, id, { status: 'approved' })
+      )
+    )
+    selectedRequests.value = []
+    await loadRequests()
+  } catch (err) {
+    alert('Failed to approve requests')
+  }
+}
+
+const bulkReject = async () => {
+  if (!confirm(`Reject ${selectedRequests.value.length} requests?`)) return
+  
+  try {
+    await Promise.all(
+      selectedRequests.value.map(id => 
+        api.updateRequest(projectId, id, { status: 'rejected' })
+      )
+    )
+    selectedRequests.value = []
+    await loadRequests()
+  } catch (err) {
+    alert('Failed to reject requests')
+  }
+}
 
 onMounted(async () => {
   try {
