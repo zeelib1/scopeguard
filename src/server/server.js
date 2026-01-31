@@ -35,6 +35,7 @@ const portalRoutes = require('./routes/portal');
 const templateRoutes = require('./routes/templates');
 const stripeRoutes = require('./routes/stripe');
 const analyticsRoutes = require('./routes/analytics');
+const exportRoutes = require('./routes/export');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
@@ -42,6 +43,7 @@ app.use('/api/projects/:projectId/scope-items', scopeItemRoutes);
 app.use('/api/projects/:projectId/requests', requestRoutes);
 app.use('/api/projects/:projectId/status', dashboardRoutes);
 app.use('/api/projects/:projectId/change-orders', changeOrderRoutes);
+app.use('/api/projects/:projectId/export', exportRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/analytics', analyticsRoutes);
