@@ -27,12 +27,14 @@ const projectRoutes = require('./routes/projects');
 const scopeItemRoutes = require('./routes/scopeItems');
 const requestRoutes = require('./routes/requests');
 const dashboardRoutes = require('./routes/dashboard');
+const changeOrderRoutes = require('./routes/changeOrders');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/projects/:projectId/scope-items', scopeItemRoutes);
 app.use('/api/projects/:projectId/requests', requestRoutes);
 app.use('/api/projects/:projectId/status', dashboardRoutes);
+app.use('/api/projects/:projectId/change-orders', changeOrderRoutes);
 
 // API info endpoint
 app.get('/api', (req, res) => {
