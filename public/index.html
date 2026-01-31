@@ -10,6 +10,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             color: #333;
+            overflow-x: hidden;
         }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         header {
@@ -30,8 +31,11 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 1.1rem;
+            transition: transform 0.2s;
+            min-height: 44px;
+            line-height: 1.2;
         }
-        .cta:hover { transform: scale(1.05); transition: 0.2s; }
+        .cta:hover { transform: scale(1.05); }
         .problem {
             padding: 80px 0;
             background: #f8f9fa;
@@ -116,10 +120,15 @@
             padding: 80px 0;
         }
         .comparison h2 { text-align: center; margin-bottom: 40px; font-size: 2rem; }
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 40px;
+            min-width: 600px;
         }
         th, td {
             padding: 15px;
@@ -136,6 +145,9 @@
             text-align: center;
             padding: 40px 0;
         }
+        footer a {
+            word-wrap: break-word;
+        }
         .stats {
             background: #667eea;
             color: white;
@@ -149,6 +161,155 @@
             margin-top: 40px;
         }
         .stat h3 { font-size: 3rem; margin-bottom: 10px; }
+
+        /* MOBILE RESPONSIVE BREAKPOINTS */
+        
+        /* Tablets and small desktops (up to 1024px) */
+        @media (max-width: 1024px) {
+            .container { padding: 0 15px; }
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+
+        /* Tablets in portrait mode (up to 768px) */
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .tagline { font-size: 1.1rem; }
+            
+            header, .problem, .solution, .pricing, .comparison, .stats {
+                padding: 40px 0;
+            }
+            
+            .problem h2, .solution h2, .pricing h2, .comparison h2 {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+            
+            .problem-grid, .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+                order: -1;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .stat h3 { font-size: 2.5rem; }
+            
+            .feature-icon { font-size: 2.5rem; }
+            
+            .price {
+                font-size: 2.5rem;
+            }
+            .price span { font-size: 1.2rem; }
+        }
+
+        /* Mobile phones (up to 480px) */
+        @media (max-width: 480px) {
+            .container { padding: 0 10px; }
+            
+            h1 { font-size: 1.75rem; }
+            .tagline { font-size: 1rem; }
+            
+            header, .problem, .solution, .pricing, .comparison, .stats {
+                padding: 30px 0;
+            }
+            
+            .cta {
+                padding: 12px 30px;
+                font-size: 1rem;
+                display: block;
+                margin: 20px auto;
+                max-width: 280px;
+            }
+            
+            .problem h2, .solution h2, .pricing h2, .comparison h2 {
+                font-size: 1.3rem;
+                margin-bottom: 20px;
+            }
+            
+            .problem-card, .pricing-card {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat h3 { font-size: 2rem; }
+            
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            
+            table {
+                font-size: 0.85rem;
+            }
+            
+            footer {
+                padding: 30px 0;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Extra small phones (up to 360px) */
+        @media (max-width: 360px) {
+            h1 { font-size: 1.5rem; }
+            .tagline { font-size: 0.9rem; }
+            
+            .problem-card h3, .feature h3 {
+                font-size: 1.1rem;
+            }
+            
+            .price {
+                font-size: 2rem;
+            }
+            .price span { font-size: 1rem; }
+        }
+
+        /* Touch device improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .cta {
+                padding: 16px 40px;
+                min-height: 48px;
+            }
+            
+            a, button {
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Landscape mode on small devices */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 30px 0;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 10px;
+            }
+            
+            .cta {
+                margin-top: 15px;
+                padding: 10px 30px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -290,6 +451,7 @@
     <section class="comparison">
         <div class="container">
             <h2>Why ScopeGuard?</h2>
+            <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
@@ -338,6 +500,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </section>
 
