@@ -1,9 +1,53 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const Request = require('../models/Request');
+const Attachment = require('../models/Attachment');
 const Project = require('../models/Project');
 const { authMiddleware } = require('../middleware/auth');
 
 const router = express.Router({ mergeParams: true });
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '../../../uploads/attachments');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Allow common file types
+    const allowedMimes = [
+      'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'text/plain'
+    ];
+    
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Allowed: images, PDFs, Word, Excel, text files'));
+    }
+  }
+});
 
 // All routes require authentication
 router.use(authMiddleware);
@@ -36,7 +80,7 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/projects/:projectId/requests - Create new request
-router.post('/', (req, res) => {
+router.post('/', upload.array('attachments', 5), (req, res) => {
   try {
     const { description, source, status, scope_item_id, notes } = req.body;
 
@@ -53,10 +97,26 @@ router.post('/', (req, res) => {
       notes
     });
 
-    res.status(201).json({ request });
+    // Handle file attachments if present
+    const attachments = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const attachment = Attachment.create({
+          request_id: request.id,
+          filename: file.filename,
+          original_filename: file.originalname,
+          mime_type: file.mimetype,
+          file_size: file.size,
+          file_path: file.path
+        });
+        attachments.push(attachment);
+      }
+    }
+
+    res.status(201).json({ request, attachments });
   } catch (err) {
     console.error('Create request error:', err);
-    res.status(500).json({ error: 'Failed to create request' });
+    res.status(500).json({ error: err.message || 'Failed to create request' });
   }
 });
 
@@ -69,7 +129,10 @@ router.get('/:id', (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    res.json({ request });
+    // Include attachments
+    const attachments = Attachment.findByRequestId(req.params.id);
+
+    res.json({ request, attachments });
   } catch (err) {
     console.error('Get request error:', err);
     res.status(500).json({ error: 'Failed to fetch request' });
@@ -135,11 +198,123 @@ router.delete('/:id', (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
+    // Delete attachments from filesystem
+    const attachments = Attachment.findByRequestId(req.params.id);
+    for (const attachment of attachments) {
+      try {
+        if (fs.existsSync(attachment.file_path)) {
+          fs.unlinkSync(attachment.file_path);
+        }
+      } catch (fileErr) {
+        console.error('Failed to delete file:', fileErr);
+      }
+    }
+
     Request.delete(req.params.id);
     res.json({ message: 'Request deleted successfully' });
   } catch (err) {
     console.error('Delete request error:', err);
     res.status(500).json({ error: 'Failed to delete request' });
+  }
+});
+
+// GET /api/projects/:projectId/requests/:id/attachments - Get all attachments for request
+router.get('/:id/attachments', (req, res) => {
+  try {
+    const request = Request.findById(req.params.id);
+    
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    const attachments = Attachment.findByRequestId(req.params.id);
+    res.json({ attachments });
+  } catch (err) {
+    console.error('Get attachments error:', err);
+    res.status(500).json({ error: 'Failed to fetch attachments' });
+  }
+});
+
+// POST /api/projects/:projectId/requests/:id/attachments - Add attachments to existing request
+router.post('/:id/attachments', upload.array('attachments', 5), (req, res) => {
+  try {
+    const request = Request.findById(req.params.id);
+    
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    const attachments = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const attachment = Attachment.create({
+          request_id: request.id,
+          filename: file.filename,
+          original_filename: file.originalname,
+          mime_type: file.mimetype,
+          file_size: file.size,
+          file_path: file.path
+        });
+        attachments.push(attachment);
+      }
+    }
+
+    res.status(201).json({ attachments });
+  } catch (err) {
+    console.error('Upload attachments error:', err);
+    res.status(500).json({ error: err.message || 'Failed to upload attachments' });
+  }
+});
+
+// GET /api/projects/:projectId/requests/:id/attachments/:attachmentId/download - Download attachment
+router.get('/:id/attachments/:attachmentId/download', (req, res) => {
+  try {
+    const attachment = Attachment.findById(req.params.attachmentId);
+    
+    if (!attachment) {
+      return res.status(404).json({ error: 'Attachment not found' });
+    }
+
+    // Verify attachment belongs to the request
+    if (attachment.request_id !== parseInt(req.params.id)) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    if (!fs.existsSync(attachment.file_path)) {
+      return res.status(404).json({ error: 'File not found on server' });
+    }
+
+    res.download(attachment.file_path, attachment.original_filename);
+  } catch (err) {
+    console.error('Download attachment error:', err);
+    res.status(500).json({ error: 'Failed to download attachment' });
+  }
+});
+
+// DELETE /api/projects/:projectId/requests/:id/attachments/:attachmentId - Delete attachment
+router.delete('/:id/attachments/:attachmentId', (req, res) => {
+  try {
+    const attachment = Attachment.findById(req.params.attachmentId);
+    
+    if (!attachment) {
+      return res.status(404).json({ error: 'Attachment not found' });
+    }
+
+    // Verify attachment belongs to the request
+    if (attachment.request_id !== parseInt(req.params.id)) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    // Delete file from filesystem
+    if (fs.existsSync(attachment.file_path)) {
+      fs.unlinkSync(attachment.file_path);
+    }
+
+    Attachment.delete(req.params.attachmentId);
+    res.json({ message: 'Attachment deleted successfully' });
+  } catch (err) {
+    console.error('Delete attachment error:', err);
+    res.status(500).json({ error: 'Failed to delete attachment' });
   }
 });
 
