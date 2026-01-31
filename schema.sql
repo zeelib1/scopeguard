@@ -13,6 +13,22 @@ CREATE TABLE IF NOT EXISTS users (
     subscription_id TEXT
 );
 
+-- Project team members (multi-user collaboration)
+CREATE TABLE IF NOT EXISTS project_members (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    role TEXT DEFAULT 'member', -- owner, admin, member, viewer
+    invited_by INTEGER,
+    invited_at INTEGER DEFAULT (strftime('%s', 'now')),
+    accepted_at INTEGER,
+    status TEXT DEFAULT 'active', -- active, invited, removed
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (invited_by) REFERENCES users(id) ON DELETE SET NULL,
+    UNIQUE(project_id, user_id)
+);
+
 -- Projects table
 CREATE TABLE IF NOT EXISTS projects (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -160,6 +176,8 @@ CREATE TABLE IF NOT EXISTS subscription_events (
 
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_projects_user_id ON projects(user_id);
+CREATE INDEX IF NOT EXISTS idx_project_members_project_id ON project_members(project_id);
+CREATE INDEX IF NOT EXISTS idx_project_members_user_id ON project_members(user_id);
 CREATE INDEX IF NOT EXISTS idx_scope_items_project_id ON scope_items(project_id);
 CREATE INDEX IF NOT EXISTS idx_requests_project_id ON requests(project_id);
 CREATE INDEX IF NOT EXISTS idx_request_attachments_request_id ON request_attachments(request_id);
