@@ -25,10 +25,12 @@ app.get('/api/health', (req, res) => {
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const scopeItemRoutes = require('./routes/scopeItems');
+const requestRoutes = require('./routes/requests');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/projects/:projectId/scope-items', scopeItemRoutes);
+app.use('/api/projects/:projectId/requests', requestRoutes);
 
 // API info endpoint
 app.get('/api', (req, res) => {
