@@ -109,13 +109,63 @@ class ChangeOrder {
   }
 
   // Approve change order
-  static approve(id) {
-    return this.update(id, { status: 'approved' });
+  static approve(id, approvedBy = 'freelancer', clientNotes = null) {
+    const updates = ['status = ?', 'approved_at = ?', 'approved_by = ?'];
+    const values = ['approved', Math.floor(Date.now() / 1000), approvedBy];
+
+    if (clientNotes) {
+      updates.push('client_notes = ?');
+      values.push(clientNotes);
+    }
+
+    values.push(id);
+
+    query.run(
+      `UPDATE change_orders SET ${updates.join(', ')} WHERE id = ?`,
+      values
+    );
+
+    return this.findById(id);
   }
 
   // Reject change order
-  static reject(id) {
-    return this.update(id, { status: 'rejected' });
+  static reject(id, clientNotes = null) {
+    const updates = ['status = ?', 'rejected_at = ?'];
+    const values = ['rejected', Math.floor(Date.now() / 1000)];
+
+    if (clientNotes) {
+      updates.push('client_notes = ?');
+      values.push(clientNotes);
+    }
+
+    values.push(id);
+
+    query.run(
+      `UPDATE change_orders SET ${updates.join(', ')} WHERE id = ?`,
+      values
+    );
+
+    return this.findById(id);
+  }
+
+  // Send to client for review
+  static sendToClient(id) {
+    query.run(
+      `UPDATE change_orders SET status = 'client_reviewing' WHERE id = ?`,
+      [id]
+    );
+
+    return this.findById(id);
+  }
+
+  // Client provides feedback without approving/rejecting
+  static addClientFeedback(id, clientNotes) {
+    query.run(
+      `UPDATE change_orders SET client_notes = ? WHERE id = ?`,
+      [clientNotes, id]
+    );
+
+    return this.findById(id);
   }
 
   // Delete change order

@@ -137,9 +137,12 @@ CREATE TABLE IF NOT EXISTS change_orders (
     title TEXT NOT NULL,
     description TEXT,
     price REAL NOT NULL, -- Dollar amount for the change
-    status TEXT DEFAULT 'pending', -- pending, approved, rejected
+    status TEXT DEFAULT 'pending', -- pending, approved, rejected, client_reviewing
+    client_notes TEXT, -- Client feedback on the change order
+    approved_by TEXT, -- 'client' or 'freelancer'
     created_at INTEGER DEFAULT (strftime('%s', 'now')),
     approved_at INTEGER,
+    rejected_at INTEGER,
     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
