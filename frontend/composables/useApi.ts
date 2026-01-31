@@ -101,6 +101,26 @@ export const useApi = () => {
     // Reports
     getReports: () => apiFetch('/reports'),
     generateReport: (projectId: number) =>
-      apiFetch(`/reports/project/${projectId}`, { method: 'POST' })
+      apiFetch(`/reports/project/${projectId}`, { method: 'POST' }),
+
+    // Time Entries
+    getTimeEntries: (projectId: number) =>
+      apiFetch(`/projects/${projectId}/time-entries`),
+    
+    createTimeEntry: (projectId: number, data: any) =>
+      apiFetch(`/projects/${projectId}/time-entries`, { method: 'POST', body: data }),
+    
+    updateTimeEntry: (projectId: number, id: number, data: any) =>
+      apiFetch(`/projects/${projectId}/time-entries/${id}`, { method: 'PUT', body: data }),
+
+    // Attachments/Files
+    uploadFile: (projectId: number, requestId: number, formData: FormData) =>
+      apiFetch(`/projects/${projectId}/requests/${requestId}/attachments`, { 
+        method: 'POST', 
+        body: formData 
+      }),
+    
+    getAttachments: (projectId: number, requestId: number) =>
+      apiFetch(`/projects/${projectId}/requests/${requestId}/attachments`)
   }
 }
