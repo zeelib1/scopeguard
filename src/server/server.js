@@ -34,6 +34,7 @@ const changeOrderRoutes = require('./routes/changeOrders');
 const portalRoutes = require('./routes/portal');
 const templateRoutes = require('./routes/templates');
 const stripeRoutes = require('./routes/stripe');
+const analyticsRoutes = require('./routes/analytics');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
@@ -43,6 +44,7 @@ app.use('/api/projects/:projectId/status', dashboardRoutes);
 app.use('/api/projects/:projectId/change-orders', changeOrderRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/stripe', stripeRoutes);
+app.use('/api/analytics', analyticsRoutes);
 app.use('/api', portalRoutes); // Portal routes (includes public endpoint)
 
 // API info endpoint
