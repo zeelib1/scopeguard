@@ -83,7 +83,7 @@ router.get('/', (req, res) => {
 // POST /api/projects/:projectId/requests - Create new request
 router.post('/', upload.array('attachments', 5), (req, res) => {
   try {
-    const { description, source, status, scope_item_id, notes } = req.body;
+    const { description, source, status, priority, scope_item_id, notes } = req.body;
 
     if (!description) {
       return res.status(400).json({ error: 'Description required' });
@@ -94,6 +94,7 @@ router.post('/', upload.array('attachments', 5), (req, res) => {
       description,
       source,
       status: status || 'pending',
+      priority: priority || 'medium',
       scope_item_id,
       notes
     });
@@ -151,12 +152,13 @@ router.put('/:id', (req, res) => {
       return res.status(404).json({ error: 'Request not found' });
     }
 
-    const { description, source, status, scope_item_id, notes } = req.body;
+    const { description, source, status, priority, scope_item_id, notes } = req.body;
 
     const updated = Request.update(req.params.id, {
       description,
       source,
       status,
+      priority,
       scope_item_id,
       notes
     });

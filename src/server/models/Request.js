@@ -2,15 +2,19 @@ const { query } = require('../../database/db');
 
 class Request {
   // Create request
-  static create({ project_id, description, source, status, scope_item_id, notes }) {
+  static create({ project_id, description, source, status, priority, scope_item_id, notes }) {
+    const validPriorities = ['low', 'medium', 'high', 'urgent'];
+    const requestPriority = priority && validPriorities.includes(priority) ? priority : 'medium';
+
     const result = query.run(
-      `INSERT INTO requests (project_id, description, source, status, scope_item_id, notes, requested_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO requests (project_id, description, source, status, priority, scope_item_id, notes, requested_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         project_id,
         description,
         source || null,
         status || 'pending',
+        requestPriority,
         scope_item_id || null,
         notes || null,
         Math.floor(Date.now() / 1000)
@@ -48,7 +52,7 @@ class Request {
   }
 
   // Update request
-  static update(id, { description, source, status, scope_item_id, notes }) {
+  static update(id, { description, source, status, priority, scope_item_id, notes }) {
     const updates = [];
     const values = [];
 
@@ -68,6 +72,13 @@ class Request {
       if (status !== 'pending') {
         updates.push('reviewed_at = ?');
         values.push(Math.floor(Date.now() / 1000));
+      }
+    }
+    if (priority !== undefined) {
+      const validPriorities = ['low', 'medium', 'high', 'urgent'];
+      if (validPriorities.includes(priority)) {
+        updates.push('priority = ?');
+        values.push(priority);
       }
     }
     if (scope_item_id !== undefined) {

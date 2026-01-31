@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS requests (
     description TEXT NOT NULL,
     source TEXT, -- "email", "slack", "call", "meeting"
     status TEXT DEFAULT 'pending', -- pending, in-scope, out-of-scope, change-order-sent
+    priority TEXT DEFAULT 'medium', -- low, medium, high, urgent
     scope_item_id INTEGER, -- NULL if out-of-scope
     requested_at INTEGER DEFAULT (strftime('%s', 'now')),
     reviewed_at INTEGER,
